@@ -464,17 +464,18 @@ def run_training(
   # Params that change very rarely.
   tb_save_graph = False
 
-  # Set up logging
-  os.makedirs(save_dir, exist_ok=True)
-  from imp import reload  # reinit logging so that logging.basicConfig works
-  reload(logging)
-  logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
-                      level=logging.INFO,
-                      filename=save_dir + '/run.log')
-  f_train = open(save_dir + '/train_stats.csv', 'a')
-  f_train.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2,gr_norm,ch_norm\n')
-  f_test = open(save_dir + '/test_stats.csv', 'a')
-  f_test.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2\n')
+  if save_dir != None:
+    # Set up logging
+    os.makedirs(save_dir, exist_ok=True)
+    from imp import reload  # reinit logging so that logging.basicConfig works
+    reload(logging)
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s',
+                        level=logging.INFO,
+                        filename=save_dir + '/run.log')
+    f_train = open(save_dir + '/train_stats.csv', 'a')
+    f_train.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2,gr_norm,ch_norm\n')
+    f_test = open(save_dir + '/test_stats.csv', 'a')
+    f_test.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2\n')
 
   # Log training params
   params = locals()
