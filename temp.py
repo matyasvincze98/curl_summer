@@ -38,7 +38,7 @@ train_every = run_training_params['dataset_params']['train_every']
 test_every = run_training_params['dataset_params']['test_every']
 
 train_data = pickle.load(open(run_training_params['dataset_params']['path'], 'rb'))
-print(train_data[:5])
+print(type(train_data))
 
 n_px = int(np.sqrt(train_data['train_images'].shape[1]))
 print(n_px)
