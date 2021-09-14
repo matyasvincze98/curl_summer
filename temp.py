@@ -30,7 +30,7 @@ run_training_params = {'dataset': 'textures',
                              'z1_distr_kwargs': {'distr': 'laplace', 'sigma_nonlin': 'exp', 'sigma_param': 'var'}, 
                              'z2_distr_kwargs': {'distr': 'normal', 'sigma_nonlin': 'exp', 'sigma_param': 'var'}, 
                              'report_interval': 250000, 'save_dir': None, 
-                             'restore_from': 'hiercont_40px_natural_beta2_01_to_1/mycurl-7500000', 'tb_dir': None,}
+                             'restore_from': 'mycurl-7500000', 'tb_dir': None,}
 
 bs = run_training_params['dataset_params']['batch_size']
 crop_dim = run_training_params['dataset_params']['crop_dim']
