@@ -882,11 +882,12 @@ def run_training(
       if tb_dir is not None:
         summ = sess.run(tb_summaries)
         tb_writer.add_summary(summ, global_step=step)
-
-  saver.save(sess.raw_session(),
-             save_dir + '/mycurl',
-             global_step=n_steps,
-             write_meta_graph=False)
+  
+  if save_dir:
+    saver.save(sess.raw_session(),
+                 save_dir + '/mycurl',
+                 global_step=n_steps,
+                 write_meta_graph=False)
 
   f_train.flush()
   f_test.flush()
