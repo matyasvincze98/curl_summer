@@ -48,4 +48,4 @@ train_data['test_labels'] = train_data['test_labels'][::test_every]
 
 train_eval_ops, test_eval_ops, sess, params, saver = training.run_training(**run_training_params)
 
-print(train_eval_ops, tesst_eval_ops, sess, params, saver)
+print(train_eval_ops, test_eval_ops, sess, params, saver)
