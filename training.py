@@ -741,7 +741,7 @@ def run_training(
   if restore_from is not None:
     saver.restore(sess.raw_session(), save_dir + '/' + restore_from)
   '''
-  saver.restore(sess.raw_session(), save_dir + '/' + restore_from)
+  saver.restore(sess.raw_session(), restore_from)
 
   if tb_dir is not None:
     tb_writer = tf.summary.FileWriter(tb_dir,
