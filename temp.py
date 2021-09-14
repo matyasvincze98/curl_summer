@@ -38,10 +38,8 @@ train_every = run_training_params['dataset_params']['train_every']
 test_every = run_training_params['dataset_params']['test_every']
 
 train_data = pickle.load(open(run_training_params['dataset_params']['path'], 'rb'))
-print(type(train_data))
 
 n_px = int(np.sqrt(train_data['train_images'].shape[1]))
-print(n_px)
 
 train_data['train_images'] = train_data['train_images'].reshape((-1,n_px,n_px))[::train_every,:crop_dim,:crop_dim].reshape((-1,crop_dim**2))
 train_data['train_labels'] = train_data['train_labels'][::train_every]
@@ -49,3 +47,5 @@ train_data['test_images'] = train_data['test_images'].reshape((-1,n_px,n_px))[::
 train_data['test_labels'] = train_data['test_labels'][::test_every]
 
 train_eval_ops, test_eval_ops, sess, params, saver = training.run_training(**run_training_params)
+
+print(train_eval_ops, tesst_eval_ops, sess, params, saver)
