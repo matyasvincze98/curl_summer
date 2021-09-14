@@ -15,7 +15,7 @@ import eval
 
 run_training_params = {'dataset': 'textures',
                              'dataset_params': {'batch_size': 128, 'test_batch_size': 128, 'train_every': 2, 'test_every': 1, 'crop_dim': 40, 
-                                                'path': '/content/fakelabeled_natural_commonfiltered_640000_40px.pkl', 'offset': 0.0}, 
+                                                'path': '/content/fakelabeled_natural_commonfiltered_64000_40px.pkl', 'offset': 0.0}, 
                              'n_steps': 0, 'random_seed': None, 'lr_init': 0.001, 'lr_factor': 1.0, 'lr_schedule': [1], 
                              'output_type': 'normal', 'output_sd': 0.4, 'n_y': 20, 'n_y_samples': 1, 'n_y_samples_reconstr': 1, 'n_z': 1300, 
                              'beta_y_evo': 1.0, 'beta_z_evo': 1.0, 
