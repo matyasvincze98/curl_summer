@@ -889,8 +889,8 @@ def run_training(
                  global_step=n_steps,
                  write_meta_graph=False)
 
-  f_train.flush()
-  f_test.flush()
+    f_train.flush()
+    f_test.flush()
 
   if n_steps > 0:
     logging.info('Skipped updates: {}/{} = {}'.format(
