@@ -1,6 +1,7 @@
 import pandas
 import pickle5 as pickle
 
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import copy
