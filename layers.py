@@ -15,11 +15,10 @@
 ################################################################################
 """Custom layers for CURL."""
 
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-
 import logging
 import sonnet as snt
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 
 tfc = tf.compat.v1
