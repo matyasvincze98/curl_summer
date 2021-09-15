@@ -15,6 +15,9 @@
 ################################################################################
 """Script to train CURL."""
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 import collections
 import functools
 import logging
