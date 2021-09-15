@@ -23,11 +23,10 @@ import numpy as np
 import sonnet as snt
 
 import tensorflow as tf
-tf.get_logger().setLevel('INFO')
 import tensorflow_datasets as tfds
 import tensorflow_probability as tfp
 
-# import os
+import os
 import pickle
 
 import model
