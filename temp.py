@@ -51,6 +51,4 @@ train_eval_ops, test_eval_ops, sess, params, saver = training.run_training(**run
 print()
 print()
 print()
-print(test_eval_ops)
-print(test_eval_ops[0])
-tf.print(test_eval_ops[0], output_stream=sys.stderr)
+print(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images']))
