@@ -12,9 +12,6 @@ from scipy import ndimage
 import training
 import eval
 
-import tensorflow as tf
-tf.get_logger().setLevel('INFO')
-
 run_training_params = {'dataset': 'textures',
                              'dataset_params': {'batch_size': 128, 'test_batch_size': 128, 'train_every': 2, 'test_every': 1, 'crop_dim': 40, 
                                                 'path': '/content/fakelabeled_natural_commonfiltered_640000_40px.pkl', 'offset': 0.0}, 
