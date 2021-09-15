@@ -14,8 +14,6 @@
 #     limitations under the License.
 ################################################################################
 """Script to train CURL."""
-import warnings
-warnings.filterwarnings("ignore")
 
 import collections
 import functools
