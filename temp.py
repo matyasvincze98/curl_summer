@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import pandas
 import pickle5 as pickle
 
