@@ -20,8 +20,6 @@ from __future__ import division
 from __future__ import print_function
 
 import logging
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 import tensorflow_probability as tfp
 
