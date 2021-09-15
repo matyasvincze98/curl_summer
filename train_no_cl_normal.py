@@ -32,6 +32,9 @@ on these settings (ie. the data_period variable), so the 0.1T runs can be
 reproduced by dividing this value by 10.
 """
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 from datetime import datetime
 import numpy as np
 
