@@ -3,14 +3,14 @@ import pickle5 as pickle
 
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import copy
 
 from scipy import stats
 from scipy import special
 from scipy import ndimage
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import training
 import eval
 
