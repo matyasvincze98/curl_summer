@@ -104,4 +104,5 @@ for num_plot in range(6):
     axs[2,1].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
     axs[2,1].set_title(plot_titles[num_plot])
 
+plt.tight_layout()
 plt.savefig('current_plot.png')
