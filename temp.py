@@ -77,25 +77,31 @@ for num_plot in range(6):
     axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
   elif num_plot == 1:
-    axs[0,0].plot(x, y, alpha=0.3, marker='o')
+    axs[1,0].plot(x, y, alpha=0.3, marker='o')
     axs[1,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
-    axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot == 2:
-    axs[0,0].plot(x, y, alpha=0.3, marker='o')
-    axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[1,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
+  elif num_plot == 2:
+    axs[2,0].plot(x, y, alpha=0.3, marker='o')
+    axs[2,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
+    axs[2,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
   elif num_plot == 3:
     axs[0,1].plot(x, y, alpha=0.3, marker='o')
-    axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
-    axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot == 4:
-    axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[0,1].plot(x, [np.mean(y)]*len(x), linestyle='--')
-    axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  else:
-    axs[0,0].plot(x, y, alpha=0.3, marker='o')
-    axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,1].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
+  elif num_plot == 4:
+    axs[1,1].plot(x, y, alpha=0.3, marker='o')
+    axs[1,1].plot(x, [np.mean(y)]*len(x), linestyle='--')
+    axs[1,1].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
+  else:
+    axs[2,1].plot(x, y, alpha=0.3, marker='o')
+    axs[2,1].plot(x, [np.mean(y)]*len(x), linestyle='--')
+    axs[2,1].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+    axs.set_title(plot_titles[num_plot])
 
 plt.savefig('current_plot.png')
