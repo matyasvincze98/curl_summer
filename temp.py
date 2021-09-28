@@ -73,23 +73,23 @@ fig, axs = plt.subplots(2, 3)
 
 for num_plot in range(6):
   y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[num_plot]) for num_batch in range(num_of_batches)]
-  if num_plot = 0:
+  if num_plot == 0:
     axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot = 1:
+  elif num_plot == 1:
     axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[1,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot = 2:
+  elif num_plot == 2:
     axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[1,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot = 3:
+  elif num_plot == 3:
     axs[0,1].plot(x, y, alpha=0.3, marker='o')
     axs[0,0].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
-  elif num_plot = 4:
+  elif num_plot == 4:
     axs[0,0].plot(x, y, alpha=0.3, marker='o')
     axs[0,1].plot(x, [np.mean(y)]*len(x), linestyle='--')
     axs[0,0].fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
