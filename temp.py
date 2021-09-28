@@ -74,5 +74,6 @@ x = np.linspace(0, 10, 10)
 
 y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[0]) for num_batch in range(10)]
 
-ax.scatter(x, y)
+ax.plot(x, y, marker='o')
+ax.plot(x, [np.mean(y)]*len(x), linestyle='--')
 plt.savefig('current_plot.png')
