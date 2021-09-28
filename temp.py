@@ -78,4 +78,5 @@ y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_varia
 ax.plot(x, y, alpha=0.3, marker='o')
 ax.plot(x, [np.mean(y)]*len(x), linestyle='--')
 ax.fill_between(x, [np.mean(y)+np.var(y)]*len(x), [np.mean(y)-np.var(y)]*len(x), alpha=0.3)
+print(np.mean(y), np.var(y), np.mean(y)+np.var(y), np.mean(y)-np.var(y))
 plt.savefig('current_plot.png')
