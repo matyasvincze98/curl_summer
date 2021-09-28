@@ -50,7 +50,7 @@ train_eval_ops, test_eval_ops, sess, params, saver = training.run_training(**run
 
 print()
 print()
-print(len(train_data['test_images'])/128)
+print()
 first_batch = eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][:128])
 print('z2_samples_from_x_in: (batch_size, n_y)')
 print(first_batch[0].shape)
@@ -70,9 +70,10 @@ print(type(first_batch[0]))
 fig = plt.figure()
 ax = plt.axes()
 
-x = np.linspace(0, 10, 10)
+num_of_batches = int(len(train_data['test_images'])/128)
+x = np.linspace(0, num_of_batches, num_of_batches)
 
-y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[0]) for num_batch in range(10)]
+y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[0]) for num_batch in range(num_of_batches)]
 
 ax.plot(x, y, marker='o')
 ax.plot(x, [np.mean(y)]*len(x), linestyle='--')
