@@ -69,7 +69,7 @@ num_of_batches = int(len(train_data['test_images'])/128)
 x = np.linspace(0, num_of_batches, num_of_batches)
 plot_titles = ['z2_samples_from_x_in', 'z2_mean_from_x_in', 'z2_var_from_x_in', 'z1_sample_from_x_in', 'z1_mean_from_x_in', 'z1_var_from_x_in']
 
-fig, axs = plt.subplots(2, 3)
+fig, axs = plt.subplots(3, 2)
 
 for num_plot in range(6):
   y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[num_plot]) for num_batch in range(num_of_batches)]
