@@ -48,28 +48,11 @@ train_data['test_labels'] = train_data['test_labels'][::test_every]
 
 train_eval_ops, test_eval_ops, sess, params, saver = training.run_training(**run_training_params)
 
-print()
-print()
-print()
-first_batch = eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][:128])
-print('z2_samples_from_x_in: (batch_size, n_y)')
-print(first_batch[0].shape)
-print('z2_mean_from_x_in: (batch_size, n_y)')
-print(first_batch[1].shape)
-print('z2_variance_from_x_in: (batch_size, n_y)')
-print(first_batch[2].shape)
-print('z1_sample_from_x_in: (batch_size, n_z)')
-print(first_batch[3].shape)
-print('z1_mean_from_x_in: (batch_size, n_z)')
-print(first_batch[4].shape)
-print('z1_variance_from_x_in: (batch_size, n_z)')
-print(first_batch[5].shape)
-
 num_of_batches = int(len(train_data['test_images'])/128)
 x = np.linspace(0, num_of_batches, num_of_batches)
 plot_titles = ['z2_samples_from_x_in', 'z2_mean_from_x_in', 'z2_var_from_x_in', 'z1_sample_from_x_in', 'z1_mean_from_x_in', 'z1_var_from_x_in']
 
-fig, axs = plt.subplots(3, 2)
+fig, axs = plt.subplots(3, 2, sharey='row')
 
 for num_plot in range(6):
   y = [np.mean(eval.infer_z2_sample_z2_mean_z2_variance_z1_sample_z1_mean_z1_variance(train_eval_ops, sess, params, train_data['test_images'][num_batch*128:(num_batch+1)*128])[num_plot]) for num_batch in range(num_of_batches)]
