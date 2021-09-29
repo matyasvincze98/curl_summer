@@ -312,6 +312,8 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
 
   ll = log_p_x - beta_y * kl_y - beta_z * kl_z
+  print('elbo')
+  print(ll, log_p_x, beta_y, kl_y, beta_z, kl_z)
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
