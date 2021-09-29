@@ -310,28 +310,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
 
   """
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
-
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z
-  print('elbo')
-  print(ll, log_p_x, beta_y, kl_y, beta_z, kl_z)
-  elbo = -tf.reduce_mean(ll)
-
-  # L2 regularization for all model weights.
-  if l2_lambda_w:
-    elbo = elbo + l2_lambda_w * tf.add_n([tf.nn.l2_loss(v)
-                                          for v in tf.trainable_variables()
-                                          if 'w:0' in v.name])
-
-  # L2 regularization for all model biases.
-  if l2_lambda_b:
-    elbo = elbo + l2_lambda_b * tf.add_n([tf.nn.l2_loss(v)
-                                          for v in tf.trainable_variables()
-                                          if 'b:0' in v.name])
-
-  # Summaries
-  kl_y = tf.reduce_mean(kl_y)
-  kl_z = tf.reduce_mean(kl_z)
-
+    
   # Evaluation.
   z2_prior_samples = curl_model.compute_prior().sample()
   z1_samples_from_z2_prior_samples = \
@@ -370,6 +349,30 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
 
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - (tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
+  print('elbo')
+  print(ll, log_p_x, beta_y, kl_y, beta_z, kl_z)
+  elbo = -tf.reduce_mean(ll)
+
+  # L2 regularization for all model weights.
+  if l2_lambda_w:
+    elbo = elbo + l2_lambda_w * tf.add_n([tf.nn.l2_loss(v)
+                                          for v in tf.trainable_variables()
+                                          if 'w:0' in v.name])
+
+  # L2 regularization for all model biases.
+  if l2_lambda_b:
+    elbo = elbo + l2_lambda_b * tf.add_n([tf.nn.l2_loss(v)
+                                          for v in tf.trainable_variables()
+                                          if 'b:0' in v.name])
+
+  # Summaries
+  kl_y = tf.reduce_mean(kl_y)
+  kl_z = tf.reduce_mean(kl_z)
+
+  '''
+  '''
+    
   return (MainOps(elbo, ll, log_p_x, kl_y, kl_z, beta_y, beta_z),
           EvalOps(x_in, z1_in, z2_in,
                   z2_prior_samples, z1_samples_from_z2_prior_samples,
