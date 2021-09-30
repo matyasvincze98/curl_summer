@@ -349,9 +349,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
 
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - (tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
-  print('elbo')
-  print(ll, log_p_x, beta_y, kl_y, beta_z, kl_z)
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(curl_model._lambda, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
