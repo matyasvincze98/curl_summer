@@ -320,7 +320,6 @@ class Curl(object):
     self._n_y_samples_reconstr = n_y_samples_reconstr
     self._is_training = is_training
     self._cache = {}
-    self._lambda = tf.Variable(tf.random_uniform(shape=[128,], dtype=tf.float32, minval=0.1, maxval=1.0), name="lambda_own")
 
   def sample(self, sample_shape=(), y=None, mean=False):
     """Draws a sample from the learnt distribution p(x).
