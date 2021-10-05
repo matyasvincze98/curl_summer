@@ -311,6 +311,9 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   """
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
     
+  
+  lambda_own = tf.Variable(tf.random_uniform(shape=[128,], dtype=tf.float32, minval=0.1, maxval=1.0), name="lambda_own")
+    
   # Evaluation.
   z2_prior_samples = curl_model.compute_prior().sample()
   z1_samples_from_z2_prior_samples = \
@@ -349,7 +352,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
 
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(curl_model._lambda, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_own, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
