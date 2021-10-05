@@ -313,6 +313,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
     
   
   lambda_own = tf.Variable(tf.random_uniform(shape=[128,], dtype=tf.float32, minval=0.1, maxval=1.0), name="lambda_own")
+  # tf.constant(output_sd, dtype=tf.float32,shape=out_shape_with_batch)
     
   # Evaluation.
   z2_prior_samples = curl_model.compute_prior().sample()
