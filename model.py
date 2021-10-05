@@ -206,6 +206,7 @@ def data_decoder_fn(z,
     n_out_factor = 1
     out_shape = list(output_shape)
     out_shape_with_batch = [z.get_shape().as_list()[0]] + out_shape
+    print(f"out_shape_with_batch: {out_shape_with_batch}")
     if output_sd is None:
       observ_sd_init = lambda s, dtype, partition_info: \
         tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
