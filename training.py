@@ -314,10 +314,10 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   
   lambda_init = lambda s, dtype, partition_info: \
         tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
-  if lambda_tensor:
-      lambda_own = tf.get_variable('lambda_own', [1], tf.float32)
-  else:
+  try:
       lambda_own = tf.get_variable('lambda_own', [1], tf.float32, lambda_init)
+  else:
+      lambda_own = tf.get_variable('lambda_own', [1], tf.float32)
   lambda_tensor = lambda_own * tf.ones([128,])
     
   # lambda_own = tf.Variable(tf.random_uniform(shape=[128,], dtype=tf.float32, minval=0.1, maxval=1.0), name="lambda_own")
