@@ -316,7 +316,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
         tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
   try:
       lambda_own = tf.get_variable('lambda_own', [1], tf.float32, lambda_init)
-  else:
+  except:
       lambda_own = tf.get_variable('lambda_own', [1], tf.float32)
   lambda_tensor = lambda_own * tf.ones([128,])
     
