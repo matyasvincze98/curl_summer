@@ -310,12 +310,15 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
 
   """
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
+    
+  lambda_vmatyas = model.Lambda_VMatyas()
+  print(lambda_vmatyas, lambda_vmatyas(1.))
   
-  with tf.variable_scope(None, default_name='own', reuse=tf.AUTO_REUSE):
+  """with tf.variable_scope(None, default_name='own', reuse=tf.AUTO_REUSE):
       lambda_init = lambda s, dtype, partition_info: \
             tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
       lambda_own = tf.get_variable('lambda_own', [1], tf.float32, lambda_init)
-      lambda_tensor = lambda_own * tf.ones([128,])
+      lambda_tensor = lambda_own * tf.ones([128,])"""
     
   # lambda_own = tf.Variable(tf.random_uniform(shape=[128,], dtype=tf.float32, minval=0.1, maxval=1.0), name="lambda_own")
     
