@@ -33,8 +33,9 @@ tfc = tf.compat.v1
 class Lambda_VMatyas(snt.Module):
   """Lambda parameter for lagrange multiplier"""
   
-  def __init__(self, name=None):
+  def __init__(self, mul_one, name=None):
     super(Lambda_VMatyas, self).__init__(name=name)
+    self.mul_one = mul_one
     
   def _initialize(self, x):
     if not hasattr(self, 'w'):
