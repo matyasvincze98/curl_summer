@@ -289,7 +289,8 @@ def get_data_sources(dataset, dataset_params, dataset_kwargs,
 def setup_training_and_eval_graphs(x, beta_y, beta_z,
                                    n_y, curl_model,
                                    is_training, name,
-                                   l2_lambda_w, l2_lambda_b):
+                                   l2_lambda_w, l2_lambda_b, 
+                                   lambda_vmatyas):
   """Set up the graph and return ops for training or evaluation.
 
   Args:
@@ -310,9 +311,6 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
 
   """
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
-    
-  lambda_vmatyas = model.Lambda_VMatyas(1)
-  print(lambda_vmatyas)
   
   """with tf.variable_scope(None, default_name='own', reuse=tf.AUTO_REUSE):
       lambda_init = lambda s, dtype, partition_info: \
@@ -360,7 +358,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
 
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_tensor, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_vmatyas, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
@@ -601,6 +599,9 @@ def run_training(
       **decoder_kwargs)
   data_decoder = snt.Module(data_decoder, name='data_decoder')
 
+  lambda_vmatyas = model.Lambda_VMatyas()
+  lambda_vmatyas = lambda_vmatyas(1.)
+
   # Location-scale prior over y.
   prior_params = utils.construct_prior_params(batch_size, n_y)
   prior = utils.generate_loc_scale_distr(logits=prior_params,
@@ -645,7 +646,8 @@ def run_training(
       is_training=True,
       name='train',
       l2_lambda_w=l2_lambda_w,
-      l2_lambda_b=l2_lambda_b)
+      l2_lambda_b=l2_lambda_b, 
+      lambda_vmatyas = lambda_vmatyas)
 
   # Set up validation graph
   if valid_data is not None:
@@ -658,7 +660,8 @@ def run_training(
         is_training=False,
         name='valid',
         l2_lambda_w=l2_lambda_w,
-        l2_lambda_b=l2_lambda_b)
+        l2_lambda_b=l2_lambda_b, 
+      lambda_vmatyas = lambda_vmatyas)
 
   # Set up test graph
   test_ops, test_eval_ops = setup_training_and_eval_graphs(
@@ -670,7 +673,8 @@ def run_training(
       is_training=False,
       name='test',
       l2_lambda_w=l2_lambda_w,
-      l2_lambda_b=l2_lambda_b)
+      l2_lambda_b=l2_lambda_b, 
+      lambda_vmatyas = lambda_vmatyas)
 
   # Set up optimizer (with scheduler).
   global_step = tfc.train.get_or_create_global_step()
@@ -684,7 +688,9 @@ def run_training(
   optimizer = tfc.train.AdamOptimizer(learning_rate=lr)
   with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
     grads_vars = optimizer.compute_gradients(train_ops.elbo)
+    print(grads_vars)
     varlist = [gv[1] for gv in grads_vars]
+    print(varlist)
     grads = [gv[0] for gv in grads_vars]
     zerograds = [tf.zeros_like(g) for g in grads]
     clipped_grads, global_grad_norm = \
