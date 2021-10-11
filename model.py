@@ -30,22 +30,13 @@ tfc = tf.compat.v1
 # pylint: disable=redefined-outer-name
 
 
-class Lambda_VMatyas(snt.Module):
+class Lambda_VMatyas(snt.AbstractModule):
   """Lambda parameter for lagrange multiplier"""
   
-  def __init__(self, mul_one, name=None):
-    super(Lambda_VMatyas, self).__init__(name=name)
-    self.mul_one = mul_one
-    
-  def _initialize(self, x):
-    if not hasattr(self, 'w'):
-      lambda_init = lambda s, dtype, partition_info: \
-                tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
-      self.w = tf.Variable(lambda_init, shape=[128,], name="w")  
-    
-  def __call__(self, x):
-    self._initialize(x)
-    return tf.matmul(x, self.w)
+  def _build(self, x):
+     if not hasattr(self, 'w'):
+       self.w = tf.ones([128,])
+     return x * self.w
 
 
 class SharedEncoder(snt.AbstractModule):
