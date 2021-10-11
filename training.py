@@ -311,7 +311,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   """
   (log_p_x, kl_y, kl_z) = curl_model.log_prob_elbo_components(x)
     
-  lambda_vmatyas = model.Lambda_VMatyas()
+  lambda_vmatyas = model.Lambda_VMatyas(1)
   print(lambda_vmatyas)
   
   """with tf.variable_scope(None, default_name='own', reuse=tf.AUTO_REUSE):
