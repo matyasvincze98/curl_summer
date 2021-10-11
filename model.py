@@ -32,21 +32,13 @@ tfc = tf.compat.v1
 
 class Lambda_VMatyas(snt.Module):
   """Lambda parameter for lagrange multiplier"""
-  
-  def __init__(self, output_size, name=None):
-    super().__init__(name=name)
-    self.output_size = output_size
     
-  def _initialize(self, x):
+  @snt.once
+  def __call__(self, x):
     lambda_init = lambda s, dtype, partition_info: \
             tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
-    self.w = tf.Variable(lambda_init, name="w")
-    self.x = tf.Variable(lambda_init
-  
-  def __call__(self, x):
-    
-    self._initialize(x)
-    return x
+    self.w = tf.Variable(lambda_init, shape=[128,], name="w")
+    return x * self.w
 
 
 class SharedEncoder(snt.AbstractModule):
