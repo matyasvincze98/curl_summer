@@ -32,15 +32,19 @@ tfc = tf.compat.v1
 
 class Lambda_VMatyas(snt.Module):
   """Lambda parameter for lagrange multiplier"""
+  
+  def __init__(self, output_size, name=None):
+    super(Lambda_VMatyas, self).__init__(name=name)
     
-  # @snt.once
-  if not hasattr(self, 'w'):
+  def _initialize(self, x):
+    if not hasattr(self, 'w'):
     lambda_init = lambda s, dtype, partition_info: \
               tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
-    self.w = tf.Variable(lambda_init, shape=[128,], name="w")
+    self.w = tf.Variable(lambda_init, shape=[128,], name="w")  
     
   def __call__(self, x):
-    return x * self.w
+    self._initialize(x)
+    return tf.matmul(x, self.w)
 
 
 class SharedEncoder(snt.AbstractModule):
