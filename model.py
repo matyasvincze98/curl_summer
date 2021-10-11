@@ -33,7 +33,7 @@ tfc = tf.compat.v1
 class Lambda_VMatyas(snt.Module):
   """Lambda parameter for lagrange multiplier"""
     
-  @snt.once
+  # @snt.once
   def __call__(self, x):
     lambda_init = lambda s, dtype, partition_info: \
             tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
