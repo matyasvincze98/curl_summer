@@ -34,12 +34,11 @@ class Lambda_VMatyas(snt.Module):
   """Lambda parameter for lagrange multiplier"""
     
   # @snt.once
-  def __call__(self, x):
-    if not hasattr(self, 'w'):
-      lambda_init = lambda s, dtype, partition_info: \
-              tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
-      self.w = tf.Variable(lambda_init, shape=[128,], name="w")
-    return x * self.w
+  if not hasattr(self, 'w'):
+    lambda_init = lambda s, dtype, partition_info: 
+    tf.random_uniform(shape=s, dtype=dtype, minval=0.1, maxval=1.0)
+    self.w = tf.Variable(lambda_init, shape=[128,], name="w")
+  return x * self.w
 
 
 class SharedEncoder(snt.AbstractModule):
