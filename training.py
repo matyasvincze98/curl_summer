@@ -688,9 +688,10 @@ def run_training(
   optimizer = tfc.train.AdamOptimizer(learning_rate=lr)
   with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
     grads_vars = optimizer.compute_gradients(train_ops.elbo)
-    print(grads_vars)
     varlist = [gv[1] for gv in grads_vars]
-    print(varlist)
+    for item in varlist:
+      if 'lambda' in str(item):
+        print(f'\n\n\nFound one: {item}\n\n\n')
     grads = [gv[0] for gv in grads_vars]
     zerograds = [tf.zeros_like(g) for g in grads]
     clipped_grads, global_grad_norm = \
