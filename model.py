@@ -35,7 +35,7 @@ class Lambda_VMatyas(snt.AbstractModule):
   
   def _build(self, x):
      if not hasattr(self, 'w'):
-       self.w = tf.ones([128,])
+       self.w = tf.Variable([1.]*128, trainable=True)
      return x * self.w
 
 
