@@ -10,13 +10,15 @@ from scipy import stats
 from scipy import special
 from scipy import ndimage
 
+import time
+
 import training
 import eval
 
 run_training_params = {'dataset': 'textures',
                              'dataset_params': {'batch_size': 128, 'test_batch_size': 128, 'train_every': 2, 'test_every': 1, 'crop_dim': 40, 
                                                 'path': '/content/fakelabeled_natural_commonfiltered_640000_40px.pkl', 'offset': 0.0}, 
-                             'n_steps': 0, 'random_seed': None, 'lr_init': 0.001, 'lr_factor': 1.0, 'lr_schedule': [1], 
+                             'n_steps': 10, 'random_seed': None, 'lr_init': 0.001, 'lr_factor': 1.0, 'lr_schedule': [1], 
                              'output_type': 'normal', 'output_sd': 0.4, 'n_y': 20, 'n_y_samples': 1, 'n_y_samples_reconstr': 1, 'n_z': 1300, 
                              'beta_y_evo': 1.0, 'beta_z_evo': 1.0, 
                              'encoder_kwargs': {'encoder_type': 'mlp', 'n_enc': [1400], 'enc_strides': [1]}, 
@@ -29,8 +31,8 @@ run_training_params = {'dataset': 'textures',
                              'latent_decoder_kwargs': {'decoder_type': 'mlp', 'n_dec': [200, 600, 1000, 1400]}, 
                              'z1_distr_kwargs': {'distr': 'laplace', 'sigma_nonlin': 'exp', 'sigma_param': 'var'}, 
                              'z2_distr_kwargs': {'distr': 'normal', 'sigma_nonlin': 'exp', 'sigma_param': 'var'}, 
-                             'report_interval': 250000, 'save_dir': None, 
-                             'restore_from': 'mycurl-7500000', 'tb_dir': None,}
+                             'report_interval': 250000, 'save_dir': f'logs/{time.strftime("%Y%m%d-%H%M%S")}', 
+                             'restore_from': None, 'tb_dir': None,}
 
 bs = run_training_params['dataset_params']['batch_size']
 crop_dim = run_training_params['dataset_params']['crop_dim']
