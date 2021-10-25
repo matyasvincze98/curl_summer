@@ -360,6 +360,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
 
   print(f"\n\n Latent encoder: {curl_model._latent_encoder}\n" \
   f"variance axis None: {tfp.stats.variance(x, sample_axis=None)}\n" \
+  f"variance axis 1 reduced: {tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1)}\n" \
   f"variance axis 0: {tfp.stats.variance(x, sample_axis=0)}\n" \
   f"variance axis 1: {tfp.stats.variance(x, sample_axis=1)}\n" \
   f"variance axis 2: {tfp.stats.variance(x, sample_axis=2)}\n\n")
