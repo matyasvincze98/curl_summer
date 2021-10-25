@@ -358,6 +358,12 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
 
+  print(f"\n\n Latent encoder: {curl_model._latent_encoder}\n" \
+  f"variance axis None: {tfp.stats.variance(x, sample_axis=None)}\n" \
+  f"variance axis 0: {tfp.stats.variance(x, sample_axis=0)}\n" \
+  f"variance axis 1: {tfp.stats.variance(x, sample_axis=1)}\n" \
+  f"variance axis 2: {tfp.stats.variance(x, sample_axis=2)}\n\n")
+
   ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_vmatyas, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
   elbo = -tf.reduce_mean(ll)
 
