@@ -33,7 +33,7 @@ tfc = tf.compat.v1
 class Lambda_VMatyas(snt.AbstractModule):
   def _build(self, x):
      if not hasattr(self, 'w'):
-       self.w = tf.Variable([1.], trainable=False)
+       self.w = tf.Variable([1.], trainable=True)
      return x * self.w
 
 
