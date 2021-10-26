@@ -37,7 +37,7 @@ tfc = tf.compat.v1
 # pylint: disable=g-long-lambda
 
 MainOps = collections.namedtuple('MainOps', [
-    'elbo', 'll', 'log_p_x', 'kl_y', 'kl_z', 'beta_y', 'beta_z'
+    'elbo', 'll', 'log_p_x', 'kl_y', 'kl_z', 'beta_y', 'beta_z', 'lambda_vmatyas'
 ])
 
 EvalOps = collections.namedtuple('EvalOps', [
@@ -357,15 +357,10 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_sample_generated = curl_model.sample(mean=False)
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
+  
+  var_vmatyas = tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1)
 
-  print(f"\n\n Latent encoder: {curl_model._latent_encoder}\n" \
-  f"variance axis None: {tfp.stats.variance(x, sample_axis=None)}\n" \
-  f"variance axis 1 reduced: {tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1)}\n" \
-  f"variance axis 0: {tfp.stats.variance(x, sample_axis=0)}\n" \
-  f"variance axis 1: {tfp.stats.variance(x, sample_axis=1)}\n" \
-  f"variance axis 2: {tfp.stats.variance(x, sample_axis=2)}\n\n")
-
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_vmatyas, tf.reduce_mean(z2_variance_from_x_in, axis=1) - 1)
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_vmatyas, var_vmatyas - 1)
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
@@ -380,6 +375,9 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
                                           for v in tf.trainable_variables()
                                           if 'b:0' in v.name])
 
+  # for var in tf.trainable_variables():
+  #   if 'lambda' in str(var): print(f"setup lambda: {var}")
+
   # Summaries
   kl_y = tf.reduce_mean(kl_y)
   kl_z = tf.reduce_mean(kl_z)
@@ -387,7 +385,7 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   '''
   '''
     
-  return (MainOps(elbo, ll, log_p_x, kl_y, kl_z, beta_y, beta_z),
+  return (MainOps(elbo, ll, log_p_x, kl_y, kl_z, beta_y, beta_z, var_vmatyas),
           EvalOps(x_in, z1_in, z2_in,
                   z2_prior_samples, z1_samples_from_z2_prior_samples,
                   x_mean_from_z1_in_z2_in, x_sample_from_z1_in_z2_in,
@@ -493,9 +491,9 @@ def run_training(
                         level=logging.INFO,
                         filename=save_dir + '/run.log')
     f_train = open(save_dir + '/train_stats.csv', 'a')
-    f_train.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2,gr_norm,ch_norm\n')
+    f_train.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2,gr_norm,ch_norm,lambda_vmatyas\n')
     f_test = open(save_dir + '/test_stats.csv', 'a')
-    f_test.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2\n')
+    f_test.write('epoch,elbo,reconstr,kl_z1,kl_z2,beta_z1,beta_z2,lambda_vmatyas\n')
 
   # Log training params
   params = locals()
@@ -608,6 +606,9 @@ def run_training(
 
   lambda_vmatyas = model.Lambda_VMatyas()
   lambda_vmatyas = lambda_vmatyas(1.)
+  # lambda_vmatyas = tf.Variable([1.], dtype=tf.float32, trainable=True)
+  # lambda_vmatyas = tf.convert_to_tensor([1.], dtype=tf.float32)
+  # print(f"lambda_vmatyas: {lambda_vmatyas}")
 
   # Location-scale prior over y.
   prior_params = utils.construct_prior_params(batch_size, n_y)
@@ -696,9 +697,6 @@ def run_training(
   with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
     grads_vars = optimizer.compute_gradients(train_ops.elbo)
     varlist = [gv[1] for gv in grads_vars]
-    for item in varlist:
-      if 'lambda' in str(item):
-        print(f'\n\n\nFound one: {item}\n\n\n')
     grads = [gv[0] for gv in grads_vars]
     zerograds = [tf.zeros_like(g) for g in grads]
     clipped_grads, global_grad_norm = \
@@ -726,7 +724,8 @@ def run_training(
       'beta_y': train_ops.beta_y,
       'beta_z': train_ops.beta_z,
       'global_grad_norm': global_grad_norm,
-      'chosen_grad_norm': chosen_grad_norm
+      'chosen_grad_norm': chosen_grad_norm,
+      'lambda_vmatyas': lambda_vmatyas
   }
   if valid_data is not None:
     valid_ops_to_run = {
@@ -755,7 +754,7 @@ def run_training(
   })
   default_train_step = train_step
   to_log += ['train_ELBO', 'train_kl_y', 'train_kl_z', 'beta_y', 'beta_z',
-             'global_grad_norm', 'chosen_grad_norm']
+             'global_grad_norm', 'chosen_grad_norm', 'lambda_vmatyas']
 
   saver = tfc.train.Saver(max_to_keep=10000)
 
@@ -844,7 +843,7 @@ def run_training(
         log_str,
         *([step] + [results[el] for el in curr_to_log]))
 
-    f_train.write('%g,%g,%g,%g,%g,%g,%g,%g,%g\n' % (step * batch_size / num_train_examples,
+    f_train.write('%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n' % (step * batch_size / num_train_examples,
                                                     results['train_ELBO'],
                                                     results['train_ELBO']
                                                     - results['train_kl_z']
@@ -854,8 +853,11 @@ def run_training(
                                                     results['beta_z'],
                                                     results['beta_y'],
                                                     results['global_grad_norm'],
-                                                    results['chosen_grad_norm']
+                                                    results['chosen_grad_norm'],
+                                                    results['lambda_vmatyas']
                                                     ))
+
+    print(f"step {step} lambda_vmatyas: {results['lambda_vmatyas']}")
 
     if gradskip_threshold < results['global_grad_norm']:
       num_skipped_updates += 1
@@ -880,7 +882,7 @@ def run_training(
           'KLy: %.3f, Test KLz: %.3f', step,
           results['test_ELBO'], results['test_kl_y'], results['test_kl_z'])
 
-      f_test.write('%g,%g,%g,%g,%g,%g,%g\n' % (step * batch_size / num_train_examples,
+      f_test.write('%g,%g,%g,%g,%g,%g,%g,%g\n' % (step * batch_size / num_train_examples,
                                                results['test_ELBO'],
                                                results['test_ELBO']
                                                - results['test_kl_z']
@@ -888,7 +890,8 @@ def run_training(
                                                results['test_kl_z'],
                                                results['test_kl_y'],
                                                results['beta_z'],
-                                               results['beta_y']
+                                               results['beta_y'],
+                                               results['lambda_vmatyas']
                                                ))
 
       if output_type == 'normal' and output_sd is None:
