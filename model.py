@@ -31,11 +31,9 @@ tfc = tf.compat.v1
 
 
 class Lambda_VMatyas(snt.AbstractModule):
-  """Lambda parameter for lagrange multiplier"""
-  
   def _build(self, x):
      if not hasattr(self, 'w'):
-       self.w = tf.Variable([1.]*128, trainable=True)
+       self.w = tf.Variable([1.], trainable=False)
      return x * self.w
 
 
