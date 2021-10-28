@@ -357,10 +357,17 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   x_sample_generated = curl_model.sample(mean=False)
   x_mean_generated_from_z2_in = curl_model.sample(y=z2_in, mean=True)
   x_sample_generated_from_z2_in = curl_model.sample(y=z2_in, mean=False)
-  
-  var_vmatyas = tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1)
 
-  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - tf.multiply(lambda_vmatyas, var_vmatyas - 1)
+  laplace_distr = curl_model._latent_encoder(hiddens=hiddens_from_x_in,
+                                             y=z2_in)
+  laplace_variance = tf.reshape(tf.reduce_mean(laplace_distr.variance(), axis=1), [128, 1])
+  laplace_constr_ = laplace_variance - 1
+
+  print(curl_model._latent_encoder)
+
+  laplace_constr = tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1) - 1
+  
+  ll = log_p_x - beta_y * kl_y - beta_z * kl_z - lambda_vmatyas * laplace_constr
   elbo = -tf.reduce_mean(ll)
 
   # L2 regularization for all model weights.
@@ -381,11 +388,8 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   # Summaries
   kl_y = tf.reduce_mean(kl_y)
   kl_z = tf.reduce_mean(kl_z)
-
-  '''
-  '''
     
-  return (MainOps(elbo, ll, log_p_x, kl_y, kl_z, beta_y, beta_z, var_vmatyas),
+  return (MainOps(elbo, ll, log_p_x, kl_y, kl_z, beta_y, beta_z, lambda_vmatyas),
           EvalOps(x_in, z1_in, z2_in,
                   z2_prior_samples, z1_samples_from_z2_prior_samples,
                   x_mean_from_z1_in_z2_in, x_sample_from_z1_in_z2_in,
