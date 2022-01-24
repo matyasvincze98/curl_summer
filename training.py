@@ -364,8 +364,11 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
   laplace_constr_ = laplace_variance - 1
 
   print(curl_model._latent_encoder)
+  print(lambda_vmatyas, laplace_constr_)
 
   laplace_constr = tf.reduce_mean(tfp.stats.variance(x, sample_axis=1), axis=1) - 1
+
+  print(laplace_constr)
   
   ll = log_p_x - beta_y * kl_y - beta_z * kl_z - lambda_vmatyas * laplace_constr
   elbo = -tf.reduce_mean(ll)
@@ -382,8 +385,8 @@ def setup_training_and_eval_graphs(x, beta_y, beta_z,
                                           for v in tf.trainable_variables()
                                           if 'b:0' in v.name])
 
-  # for var in tf.trainable_variables():
-  #   if 'lambda' in str(var): print(f"setup lambda: {var}")
+  for var in tf.trainable_variables():
+    if 'lambda' in str(var): print(f"setup lambda: {var}")
 
   # Summaries
   kl_y = tf.reduce_mean(kl_y)
